@@ -29,14 +29,14 @@ LinkList<T>::~LinkList()
 {
     Node<T> *curr = head;
     Node<T> *temp;
-
     while (curr != nullptr)
     {
-        temp = curr;
-        curr = curr->next;
-        delete temp;
+        temp = curr->next;
+        delete curr;
+        curr = temp;
     }
-    
+    head = nullptr;
+    std::cout << "----析构函数" << std::endl;
 };
 template <class T>
 void LinkList<T>::push(const T &data)

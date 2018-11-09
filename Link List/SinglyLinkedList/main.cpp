@@ -11,7 +11,7 @@ int main(int argc, char const *argv[])
     LinkList<int> list;
     clock_t startTime, endTime;
     startTime = clock();
-    for (int i = 0; i < 10; i++)
+    for (int i = 0; i < 10000000; i++)
     {
         /* code */
         list.push(i);
@@ -27,6 +27,6 @@ int main(int argc, char const *argv[])
     // list.deleteByPos(8);
     // endTime = clock();
     // cout << "----delet epos 耗时:" << endTime - startTime<<"ms" << endl;
-    list.printData();
+    // list.printData();
     return 0;
 }
