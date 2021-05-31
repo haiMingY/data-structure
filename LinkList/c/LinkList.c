@@ -4,6 +4,16 @@
 #include <assert.h>
 #include "LinkList.h"
 
+int LT(int i, int pos)
+{
+    return i < pos;
+}
+
+int LTEQ(int i, int pos)
+{
+    return i <= pos;
+}
+
 struct LinkList *create_list()
 {
     struct LinkList *l = (struct LinkList *)malloc(sizeof(struct LinkList));
@@ -16,14 +26,15 @@ void printList(struct LinkList *list)
 {
     assert(list != NULL);
     struct LinkListNode *curr = list->head;
-    while (curr!=NULL)
+    while (curr != NULL)
     {
         /* code */
         printf("data = %d\n", curr->data);
         curr = curr->next;
     }
+    printf("list size = %d \n", list->size);
 };
-
+// 尾部添加
 int push(struct LinkList *list, int value)
 {
     assert(list != NULL);
@@ -42,7 +53,7 @@ int push(struct LinkList *list, int value)
 
     return 0;
 };
-
+// 尾部移除
 int pop(struct LinkList *list)
 {
     assert(list != NULL);
@@ -59,8 +70,9 @@ int pop(struct LinkList *list)
         list->tail->next = NULL;
         break;
     default:
-        struct LinkListNode *prevNode = findTailPrevNode(list);
+        struct LinkListNode *prevNode = findNodeByPos(list, list->size - 2, LTEQ);
         assert(prevNode != NULL);
+        printf("prevNode = %d \n",prevNode->data);
         list->tail = prevNode;
         prevNode->next = NULL;
         break;
@@ -70,18 +82,85 @@ int pop(struct LinkList *list)
     return 0;
 }
 
-static struct LinkListNode *findTailPrevNode(struct LinkList *list)
+// 头部添加
+int unshift(struct LinkList *list, int value)
+{
+    assert(list != NULL);
+    struct LinkListNode *node = create_llnode(value);
+    if (list->head == NULL)
+    {
+        list->head = list->tail = node;
+    }
+    else
+    {
+        node->next = list->head;
+        list->head = node;
+    }
+
+    list->size += 1;
+    return 0;
+}
+
+// 头部移除
+int shift(struct LinkList *list)
+{
+    assert(list != NULL);
+    if (list->head == NULL)
+        return 0;
+    struct LinkListNode *node = list->head;
+    if (list->size == 1)
+    {
+        list->head = list->tail = NULL;
+    }
+    list->head = node->next;
+    if (node != NULL)
+        free(node);
+    list->size--;
+    return 0;
+}
+//链表翻转
+void reverse(struct LinkList *list)
 {
     assert(list != NULL);
     struct LinkListNode *curr = list->head;
-    while (curr != NULL && curr->next != NULL && curr->next->next != NULL)
+    struct LinkListNode *next = NULL, *prev = NULL;
+    while (curr != NULL)
     {
-        curr = curr->next;
-        /* code */
-    };
-    if (curr->next == list->tail)
-    {
-        return curr;
+        // 保存下一个指针
+        next = curr->next;
+        // 将 curr 节点的next 指针指向 prev 指针
+        curr->next = prev;
+        // 将当前节点 指向 prev 指针
+        prev = curr;
+        curr = next; // 指向下一个节点
     }
-    return NULL;
+    list->head = prev;
+}
+
+// 将数据插入制定位置之后
+int insertAfter(struct LinkList *list, int value, int pos)
+{
+    assert(list != NULL);
+    assert(list->size > pos);
+    struct LinkListNode *node = create_llnode(value);
+    struct LinkListNode *curr = findNodeByPos(list, pos, LT);
+    if (curr != NULL)
+    {
+        node->next = curr->next;
+        curr->next = node;
+    }
+    return 0;
+}
+
+struct LinkListNode *findNodeByPos(struct LinkList *list, int pos, compare com)
+{
+    printf("pos = %d \n", pos);
+    struct LinkListNode *curr = list->head;
+    for (size_t i = 0; com(i, pos) && curr != NULL; i++)
+    {
+        printf("pos = %d \n", pos);
+        /* code */
+        curr = curr->next;
+    }
+    return curr;
 }
