@@ -7,3 +7,5 @@ rotateArray.exe
 /Link List/SinglyLinkedList/main.exe
 /Link List/SinglyLinkedList/main.exe.stackdump
 *.class
+
+build
