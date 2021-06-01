@@ -72,7 +72,6 @@ int pop(struct LinkList *list)
     default:
         struct LinkListNode *prevNode = findNodeByPos(list, list->size - 2, LTEQ);
         assert(prevNode != NULL);
-        printf("prevNode = %d \n",prevNode->data);
         list->tail = prevNode;
         prevNode->next = NULL;
         break;
@@ -148,17 +147,41 @@ int insertAfter(struct LinkList *list, int value, int pos)
     {
         node->next = curr->next;
         curr->next = node;
+        list->size++;
     }
+    else
+    {
+        free(node);
+    }
+
+    return 0;
+}
+// 将数据插入制定位置之后
+int insertBefore(struct LinkList *list, int value, int pos)
+{
+    assert(list != NULL);
+    assert(list->size > pos);
+    struct LinkListNode *node = create_llnode(value);
+    struct LinkListNode *curr = findNodeByPos(list, pos-1, LT);
+    if (curr != NULL)
+    {
+        node->next = curr->next;
+        curr->next = node;
+        list->size++;
+    }
+    else
+    {
+        free(node);
+    }
+
     return 0;
 }
 
 struct LinkListNode *findNodeByPos(struct LinkList *list, int pos, compare com)
 {
-    printf("pos = %d \n", pos);
     struct LinkListNode *curr = list->head;
     for (size_t i = 0; com(i, pos) && curr != NULL; i++)
     {
-        printf("pos = %d \n", pos);
         /* code */
         curr = curr->next;
     }
