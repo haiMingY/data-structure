@@ -162,7 +162,7 @@ int insertBefore(struct LinkList *list, int value, int pos)
     assert(list != NULL);
     assert(list->size > pos);
     struct LinkListNode *node = create_llnode(value);
-    struct LinkListNode *curr = findNodeByPos(list, pos-1, LT);
+    struct LinkListNode *curr = findNodeByPos(list, pos - 1, LT);
     if (curr != NULL)
     {
         node->next = curr->next;
@@ -176,7 +176,18 @@ int insertBefore(struct LinkList *list, int value, int pos)
 
     return 0;
 }
-
+//移除某一位置的节点
+int removeNode(struct LinkList *list, int pos)
+{
+    assert(list != NULL);
+    assert(pos < list->size);
+    struct LinkListNode *curr = findNodeByPos(list, pos - 1, LT);
+    struct LinkListNode *temp = curr->next;
+    curr->next = temp->next;
+    free(temp);
+    temp = NULL;
+    return 0;
+};
 struct LinkListNode *findNodeByPos(struct LinkList *list, int pos, compare com)
 {
     struct LinkListNode *curr = list->head;
@@ -186,4 +197,30 @@ struct LinkListNode *findNodeByPos(struct LinkList *list, int pos, compare com)
         curr = curr->next;
     }
     return curr;
+}
+//获取中间节点使用双指针
+int findMiddleByDubblePoint(struct LinkList *list)
+{
+    struct LinkListNode *onePtr = list->head;
+    struct LinkListNode *twoPtr = list->head;
+    while (twoPtr != NULL && twoPtr->next != NULL)
+    {
+        onePtr = onePtr->next;
+        twoPtr = twoPtr->next->next;
+    }
+    printf(" find mid dp num = %d\n", onePtr->data);
+    return 0;
+}
+//获取中间节点使用length
+int findMiddleByLength(struct LinkList *list)
+{
+    int middle = list->size >> 1;
+    struct LinkListNode *curr = list->head;
+    for (size_t i = 0; i < middle; i++)
+    {
+        /* code */
+        curr = curr->next;
+    }
+    printf(" find mid len  num = %d\n", curr->data);
+    return 0;
 }
