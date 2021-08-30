@@ -139,14 +139,14 @@ void reverse(struct LinkList *list)
 void reverseByRecursion(struct LinkList *list)
 {
     assert(list != NULL && list->head != NULL);
-    list->head = _reverseByRecursion(list->head);
+    list->head = _recursion(list->head);
 }
 
-struct LinkListNode *_reverseByRecursion(struct LinkListNode *node)
+struct LinkListNode *_recursion(struct LinkListNode *node)
 {
     if (node->next == NULL)
         return node;
-    struct Node *temp = _reverseByRecursion(node->next);
+    struct LinkListNode *temp = _recursion(node->next);
     node->next->next = node;
     node->next = NULL;
     return temp;

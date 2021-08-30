@@ -28,9 +28,10 @@ int main(int argc, char const *argv[])
     // pop(list);
     printList(list);
 
-    findMiddleByDubblePoint(list);
-    findMiddleByLength(list);
-    removeNode(list, 4);
+    // findMiddleByDubblePoint(list);
+    // findMiddleByLength(list);
+    // removeNode(list, 4);
+    reverseByRecursion(list);
     printList(list);
     // puts("print after \n");
     return 0;

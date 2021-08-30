@@ -23,7 +23,8 @@ int insertBefore(struct LinkList *list, int value, int pos);
 int removeNode(struct LinkList *list, int pos); //移除某一位置的节点
 
 void reverse(struct LinkList *list); //链表翻转
-void reverseByRecursion(struct LinkList *list); //链表翻转
+void reverseByRecursion(struct LinkList *list); //链表翻转递归
+struct LinkListNode* _recursion(struct LinkListNode* node);
 
 void printList(struct LinkList *list); //打印链表
 
