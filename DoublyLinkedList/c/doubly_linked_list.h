@@ -17,7 +17,11 @@ int push(DoublyLinkedList *list, const int data);
 // 删除最后一个元素，并返回该元素的值
 void *pop(DoublyLinkedList *list);
 
-struct list_node* getNode(int pos); // 获取指定位置的节点
+struct list_node *getNode(int pos); // 获取指定位置的节点
+
+void removeNode(DoublyLinkedList *list, int pos); //删除指定位置的元素
+
+void reverse(DoublyLinkedList *list);// 翻转链表
 
 //打印链表
 void printList(DoublyLinkedList *list);

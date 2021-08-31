@@ -1,6 +1,11 @@
 {
     "files.associations": {
+        "*.cjson": "jsonc",
+        "*.wxss": "css",
+        "*.wxs": "javascript",
         "xlocale": "c",
-        "xstring": "c"
+        "xstring": "c",
+        "doubly_linked_list.h": "c",
+        "list_node.h": "c"
     }
 }
