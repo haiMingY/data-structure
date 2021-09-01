@@ -3,6 +3,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
+#include <assert.h>
 struct AVLNode;
 typedef struct AVLNode *AvlNode;
 typedef struct AVLNode *AVLTree;
@@ -43,7 +44,6 @@ struct AVLNode
 
 AVLTree createAvlNode(const int data)
 {
-    printf("--------------%d sizeof %lu\n", data, sizeof(AVLTree));
     AVLTree node = (AVLTree)malloc(sizeof(AVLTree));
     if (node == NULL)
     {
@@ -61,17 +61,18 @@ static int height(AvlNode node)
 
     if (node == NULL)
         return -1;
+
     return node->height;
 }
 
-static int max(int a, int b)
+static int maxNumber(const int a, const int b)
 {
     return a > b ? a : b;
-}
+};
 
 static int getMaxHeight(AVLTree node)
 {
-    return max(height(node->left), height(node->right)) + 1;
+    return maxNumber(height(node->left), height(node->right)) + 1;
 }
 
 // 左旋转（LL旋转）
@@ -79,6 +80,7 @@ AVLTree rotateLeft(AVLTree node)
 {
     // 拿出右子树节点
     AVLTree rightNode = node->right;
+    assert(rightNode != NULL);
     // 将右子树的左子树赋值给当前旋转节点的有右节点
     node->right = rightNode->left;
     //将 当前旋转节点赋值给右子树的左节点
@@ -95,6 +97,7 @@ AVLTree rotateLeft(AVLTree node)
 AVLTree rotateRight(AVLTree node)
 { // 拿出左子树节点
     AVLTree leftNode = node->left;
+    assert(leftNode != NULL);
     // 将左子树的右子树节点赋值给当前旋转节点的左侧节点
     node->left = leftNode->right;
     // 将当前旋转节点赋值给左子树的右侧节点
@@ -109,6 +112,7 @@ AVLTree rotateRight(AVLTree node)
 // 左右旋转（LR旋转）
 AVLTree rotateLeftRight(AVLTree node)
 {
+    assert(node != NULL && node->left != NULL);
     // 先对当前旋转节点的左子树节点进行左旋转 并将返回值赋值给左子树
     node->left = rotateLeft(node->left);
     // 再对当前旋转节点进行右旋转
@@ -117,6 +121,7 @@ AVLTree rotateLeftRight(AVLTree node)
 // 右左旋转（RL旋转）
 AVLTree rotateRightLeft(AVLTree node)
 {
+    assert(node != NULL && node->right != NULL);
     // 先对当前旋转节点的右子树节点进行右旋转 并将返回值赋值给右子树
     node->right = rotateRight(node->right);
     // 再对当前旋转节点进行左旋转
@@ -125,7 +130,6 @@ AVLTree rotateRightLeft(AVLTree node)
 
 AVLTree insert(const int data, AVLTree tree)
 {
-    printf("--------insert\n");
     if (tree == NULL)
     {
         tree = createAvlNode(data);
@@ -133,15 +137,16 @@ AVLTree insert(const int data, AVLTree tree)
     else if (data < tree->data)
     { //比当前节点小 插入左子树中
         tree->left = insert(data, tree->left);
-
         // 两颗子树的高度差不大于1，则该节点是平衡的
         if (height(tree->left) - height(tree->right) > 1)
         {
+              // 当前插入的值小于 左子树的值 说明 这个新节点插入到了左子树的左子树节点的位置 进行右旋转
             if (data < tree->left->data)
             {
-                tree = rotateLeft(tree);
+
+                tree = rotateRight(tree);
             }
-            else
+            else // 否则就是插入了 左子树的右子树节点位置 进行左右旋转
             {
                 tree = rotateLeftRight(tree);
             }
@@ -151,19 +156,20 @@ AVLTree insert(const int data, AVLTree tree)
     {
         // 比当前节点的值大，插入右子树中
         tree->right = insert(data, tree->right);
+        // 两颗子树的高度差不大于1，则该节点是平衡的
         if (height(tree->right) - height(tree->left) > 1)
         {
+            // 当前插入的值大于 右子树的值 说明 这个新节点插入到了 右子树的右子树的位置 进行左旋转
             if (data > tree->right->data)
             {
-                tree = rotateRight(tree);
+                tree = rotateLeft(tree);
             }
-            else
+            else // 否则就是在右子树的左子树位置 进行右左旋转
             {
                 tree = rotateRightLeft(tree);
             }
         }
     }
-
     tree->height = getMaxHeight(tree);
     return tree;
 }
@@ -172,8 +178,8 @@ void printTree(AVLTree tree, int level)
 {
     if (tree != NULL)
     {
-        printTree(tree->left, level + 1);
         printf("node data = %d, height = %d , level = %d\n", tree->data, tree->height, level);
+        printTree(tree->left, level + 1);
         printTree(tree->right, level + 1);
     }
 }
