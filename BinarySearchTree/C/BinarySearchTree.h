@@ -108,7 +108,7 @@ SearchTree deleteEl(int x, SearchTree tree)
     if (tree != NULL)
     {
         // 二分查找
-        if (tree->data > x)
+        if (tree->data > x) 
         {
             tree->left = deleteEl(x, tree->left);
         }
