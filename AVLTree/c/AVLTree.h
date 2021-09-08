@@ -2,8 +2,7 @@
 #define AVL_TREE_H
 #include <stdio.h>
 #include <stdlib.h>
-#include <math.h>
-#include <assert.h>
+
 struct AVLNode;
 typedef struct AVLNode *AvlNode;
 typedef struct AVLNode *AVLTree;
@@ -104,7 +103,6 @@ AVLTree rotateLeft(AVLTree node)
 {
     // 拿出右子树节点
     AVLTree rightNode = node->right;
-    assert(rightNode != NULL);
     // 将右子树的左子树赋值给当前旋转节点的有右节点
     node->right = rightNode->left;
     //将 当前旋转节点赋值给右子树的左节点
@@ -121,7 +119,6 @@ AVLTree rotateLeft(AVLTree node)
 AVLTree rotateRight(AVLTree node)
 { // 拿出左子树节点
     AVLTree leftNode = node->left;
-    assert(leftNode != NULL);
     // 将左子树的右子树节点赋值给当前旋转节点的左侧节点
     node->left = leftNode->right;
     // 将当前旋转节点赋值给左子树的右侧节点
@@ -136,7 +133,6 @@ AVLTree rotateRight(AVLTree node)
 // 左右旋转（LR旋转）
 AVLTree rotateLeftRight(AVLTree node)
 {
-    assert(node != NULL && node->left != NULL);
     // 先对当前旋转节点的左子树节点进行左旋转 并将返回值赋值给左子树
     node->left = rotateLeft(node->left);
     // 再对当前旋转节点进行右旋转
@@ -145,7 +141,6 @@ AVLTree rotateLeftRight(AVLTree node)
 // 右左旋转（RL旋转）
 AVLTree rotateRightLeft(AVLTree node)
 {
-    assert(node != NULL && node->right != NULL);
     // 先对当前旋转节点的右子树节点进行右旋转 并将返回值赋值给右子树
     node->right = rotateRight(node->right);
     // 再对当前旋转节点进行左旋转
