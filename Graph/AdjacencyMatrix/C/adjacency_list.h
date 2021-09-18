@@ -32,10 +32,12 @@ struct adjacency_list
 {
     // 顶点个数
     unsigned int vertex_size;
-    // 边数
+    // 总边数
     unsigned int edge_size;
+    // 表的大小
+    unsigned int length;
     // 下一个节点
-    vertex head;
+    vertex *head;
 };
 struct adjacency_list_node
 {
@@ -53,7 +55,7 @@ struct adjacency_list_node
 
 struct adjacency_list_edge
 {
-    int weight;
+    double weight;
 
     // 目标节点
     vertex dest;
@@ -77,8 +79,10 @@ void checkMemory(value any, const char *s)
     }
 };
 
+int hash(const char *key, const int size);
+
 // 生成 邻接表
-graph graph_new_list();
+graph graph_new_list(unsigned int const length);
 // 生成顶点节点
 vertex vertex_new(value v);
 // 生成边
@@ -103,15 +107,22 @@ void bfs(graph g, value v);
 
 // 打印边
 void printEdge(edge e);
+// 哈希
+int hash(const char *key, const int size)
+{
 
+    return *key % size;
+};
 // 生成 邻接表
-graph graph_new_list()
+graph graph_new_list(unsigned int const length)
 {
     graph g = (graph)malloc(sizeof(struct adjacency_list));
     checkMemory(g, "graph_new_list memory error ");
     g->edge_size = 0;
     g->vertex_size = 0;
-    g->head = NULL;
+    g->length = length;
+    g->head = malloc(sizeof(struct adjacency_list_node) * length);
+    checkMemory(g->head, "graph_new_list memory error ");
     return g;
 };
 // 生成顶点节点
@@ -141,20 +152,17 @@ void addVertex(graph g, value v)
     if (g != NULL)
     {
         vertex newVertex = vertex_new(v);
-        if (g->head == NULL)
+        int index = hash(v, g->length);
+        if (g->head[index] == NULL)
         {
-            g->head = newVertex;
+            g->head[index] = newVertex;
+
+            g->vertex_size++;
         }
         else
         {
-            vertex temp = g->head;
-            while (temp->next)
-            {
-                temp = temp->next;
-            }
-            temp->next = newVertex;
+            printf("%s hash value = %d is extised\n", v, index);
         }
-        g->vertex_size++;
     }
 };
 
@@ -163,24 +171,10 @@ void addEdge(graph g, value src, value dest)
 {
     if (g != NULL && g->head != NULL)
     {
-        vertex head = g->head;
-        vertex srcVertex = NULL, destVertex = NULL;
-        while (head)
-        {
-            if (strcmp((char *)head->data, (char *)src) == 0)
-            {
-                srcVertex = head;
-            }
-            if (strcmp((char *)head->data, (char *)dest) == 0)
-            {
-                destVertex = head;
-            }
-            if (srcVertex && destVertex)
-            {
-                break;
-            }
-            head = head->next;
-        }
+        int srcIndex = hash(src, g->length);
+        int destIndex = hash(dest, g->length);
+        vertex srcVertex = g->head[srcIndex], destVertex = g->head[destIndex];
+
         vertex_exist(srcVertex, src);
         vertex_exist(destVertex, dest);
 
@@ -207,19 +201,8 @@ vertex findVertex(graph g, value v)
 {
     if (g != NULL)
     {
-        vertex temp = g->head;
-        while (temp)
-        {
-            if (strcmp((char *)temp->data, (char *)v) != 0)
-            {
-                temp = temp->next;
-            }
-            else
-            {
-                break;
-            }
-        }
-        return temp;
+        int index = hash(v, g->length);
+        return g->head[index];
     }
 
     return NULL;
@@ -229,11 +212,13 @@ void reset_visited(graph g)
 {
     if (g != NULL)
     {
-        vertex v = g->head;
-        while (v)
+        for (size_t i = 0; i < g->length; i++)
         {
-            v->visited = 0;
-            v = v->next;
+            if (g->head[i])
+            {
+
+                g->head[i]->visited = 0;
+            }
         }
     }
 };
@@ -304,10 +289,12 @@ void printGraph(graph g)
     if (g != NULL)
     {
         printf("total vertex size = %d ; total edge size = %d \n", g->vertex_size, g->edge_size);
-        vertex temp = g->head;
-        while (temp)
+        for (size_t i = 0; i < g->length; i++)
         {
-            printf("%s => ", temp->data);
+            vertex temp = g->head[i];
+            if (!temp)
+                continue;
+            printf("index:%lu === %s => ", i, temp->data);
             edge e = temp->edges;
             while (e)
             {

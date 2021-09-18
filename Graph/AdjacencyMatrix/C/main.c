@@ -21,7 +21,7 @@ int main(int argc, char const *argv[])
     // puts("=================");
     // bfs(g, 6);
 
-    graph g = graph_new_list();
+    graph g = graph_new_list(10);
     addVertex(g, char_dup('A'));
     addVertex(g, char_dup('B'));
     addVertex(g, char_dup('C'));
@@ -29,6 +29,7 @@ int main(int argc, char const *argv[])
     addVertex(g, char_dup('E'));
     addVertex(g, char_dup('F'));
     addVertex(g, char_dup('G'));
+    addVertex(g, char_dup('H'));
     addEdge(g, char_dup('A'), char_dup('B'));
     addEdge(g, char_dup('A'), char_dup('D'));
     addEdge(g, char_dup('A'), char_dup('F'));
@@ -40,8 +41,8 @@ int main(int argc, char const *argv[])
     addEdge(g, char_dup('D'), char_dup('B'));
     addEdge(g, char_dup('D'), char_dup('G'));
     addEdge(g, char_dup('F'), char_dup('G'));
-    addEdge(g, char_dup('E'), char_dup('D'));
     addEdge(g, char_dup('E'), char_dup('A'));
+    addEdge(g, char_dup('E'), char_dup('D'));
     addEdge(g, char_dup('G'), char_dup('A'));
     addEdge(g, char_dup('G'), char_dup('E'));
     printGraph(g);
